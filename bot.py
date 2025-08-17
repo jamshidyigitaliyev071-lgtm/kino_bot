@@ -515,3 +515,36 @@ def send_ad_to_users(call):
 def start_bot():
     print("✅ Bot ishga tushdi...")
     bot.polling(none_stop=True)
+
+
+import os
+from flask import Flask
+from threading import Thread
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# 🚀 Botni ishga tushirishdan oldin serverni yoqamiz
+keep_alive()
+
+# ====== BOT QISMI ======
+import telebot
+
+TOKEN = "YOUR_BOT_TOKEN"  # shu yerga tokeningni yoz
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, "Salom! Bot ishlayapti ✅")
+
+bot.polling(none_stop=True)
